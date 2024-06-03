@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Login</title>
+    </head>
+    <body>
+        <form id="loginForm">
+            <input type="email" id="email" placeholder="Email" required />
+            <input
+                type="password"
+                id="password"
+                placeholder="Password"
+                required
+            />
+            <div>
+                <img id="captchaImage" src="" alt="CAPTCHA" />
+                <input
+                    type="text"
+                    id="captchaText"
+                    placeholder="Enter CAPTCHA"
+                    required
+                />
+                <input type="hidden" id="captchaKey" />
+            </div>
+            <button type="submit">Login</button>
+        </form>
+
+        <script>
+            async function fetchCaptcha() {
+                const response = await fetch("/captcha");
+                const data = await response.json();
+                document.getElementById("captchaKey").value = data.key;
+                document.getElementById("captchaImage").src = data.image_url;
+            }
+
+            document
+                .getElementById("loginForm")
+                .addEventListener("submit", async function (e) {
+                    e.preventDefault();
+                    const email = document.getElementById("email").value;
+                    const password = document.getElementById("password").value;
+                    const captchaText =
+                        document.getElementById("captchaText").value;
+                    const captchaKey =
+                        document.getElementById("captchaKey").value;
+
+                    const response = await fetch("/auth/login", {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json",
+                        },
+                        body: JSON.stringify({
+                            email: email,
+                            password: password,
+                            captcha_key: captchaKey,
+                            captcha_text: captchaText,
+                        }),
+                    });
+
+                    if (response.ok) {
+                        const data = await response.json();
+                        console.log("Login successful:", data);
+                    } else {
+                        console.error("Login failed");
+                    }
+                });
+
+            fetchCaptcha();
+        </script>
+    </body>
+</html>
