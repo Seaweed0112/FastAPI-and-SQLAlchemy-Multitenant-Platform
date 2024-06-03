@@ -108,7 +108,6 @@ class TestTenant:
     clean_admin_name = "".join(letter for letter in tenant_admin_name if letter.isalnum())
     tenant_admin_email = clean_admin_name + "@" + tenant_org.lower() + ".ai"
 
-
     @pytest.mark.anyio
     async def test_create_tenant(self, mssp_operator_token, client: AsyncClient):
         logger.info(f"tenant_org: {self.tenant_org}")

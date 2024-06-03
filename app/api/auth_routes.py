@@ -39,7 +39,6 @@ async def login(request: LoginRequest, db: AsyncSession = Depends(get_management
 
     _, email_domain = request.email.split("@")
 
-
     if email_domain == ADMIN_DOMAIN:
         user = await get_mssp_operator_by_email(db, request.email)
         role = "mssp_operator"
@@ -58,8 +57,16 @@ async def login(request: LoginRequest, db: AsyncSession = Depends(get_management
     if user is None or not verify_password(request.password, user.hashed_password):
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid credentials")
 
-    is_admin = (role == "mssp_operator" or user.is_admin)
-    access_token = create_access_token(data={"sub": str(request.email), "role": role, "tenant_org": tenant_org, "user_id": user.id, "is_admin": is_admin})
+    is_admin = role == "mssp_operator" or user.is_admin
+    access_token = create_access_token(
+        data={
+            "sub": str(request.email),
+            "role": role,
+            "tenant_org": tenant_org,
+            "user_id": user.id,
+            "is_admin": is_admin,
+        }
+    )
     return {"access_token": access_token, "token_type": "bearer"}
 
 

@@ -10,9 +10,11 @@ SECRET_KEY = "your_secret_key"
 ALGORITHM = "HS256"
 ACCESS_TOKEN_EXPIRE_MINUTES = 30
 
+
 def get_random_password():
-    password = ''.join((secrets.choice(string.ascii_letters + string.digits + string.punctuation) for i in range(8)))
+    password = "".join((secrets.choice(string.ascii_letters + string.digits + string.punctuation) for i in range(8)))
     return password
+
 
 def hash_password(password: str) -> str:
     salt = bcrypt.gensalt()

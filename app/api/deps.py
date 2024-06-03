@@ -35,7 +35,9 @@ async def get_management_db() -> AsyncGenerator[AsyncSession, None]:
         yield session
 
 
-async def get_tenant_db(tenant_org: str = Path(...), management_db: AsyncSession = Depends(get_management_db)) -> AsyncGenerator[AsyncSession, None]:
+async def get_tenant_db(
+    tenant_org: str = Path(...), management_db: AsyncSession = Depends(get_management_db)
+) -> AsyncGenerator[AsyncSession, None]:
     tenant_db_name = await get_tenant_db_name(tenant_org.upper(), management_db)
 
     if not tenant_db_name:
@@ -46,7 +48,6 @@ async def get_tenant_db(tenant_org: str = Path(...), management_db: AsyncSession
         TenantSessionLocal = sessionmaker(bind=tenant_engine, class_=AsyncSession, expire_on_commit=False)
         async with TenantSessionLocal() as session:
             yield session
-
 
 
 async def get_current_user(
@@ -86,7 +87,7 @@ async def get_current_mssp_operator(
 ) -> Identity:
     if current_user.role != "mssp_operator":
         raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="Not enough permissions")
-    
+
     return current_user
 
 
@@ -97,6 +98,7 @@ async def get_current_tenant_user(
     if current_user.role != "mssp_operator" and current_user.tenant_org != tenant_org.upper():
         raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="Not enough permissions")
     return current_user
+
 
 async def get_current_tenant_admin(
     tenant_org: str = Path(...),

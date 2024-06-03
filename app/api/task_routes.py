@@ -14,7 +14,9 @@ router = APIRouter()
 
 @router.post("/{tenant_org}/tasks/")
 async def create_task_for_user(
-    task: TaskCreate, current_user: Identity = Depends(get_current_tenant_user), db: AsyncSession = Depends(get_tenant_db)
+    task: TaskCreate,
+    current_user: Identity = Depends(get_current_tenant_user),
+    db: AsyncSession = Depends(get_tenant_db),
 ):
     return await create_task(db, task, current_user.user_id)
 

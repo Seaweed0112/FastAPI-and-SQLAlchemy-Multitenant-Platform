@@ -22,7 +22,15 @@ async def client():
 @pytest.fixture(scope="module")
 async def mssp_operator_token(client: AsyncClient):
     # Log in as mssp_operator
-    response = await client.post("/auth/login", json={"email": MSSP_OPERATOR_EMAIL, "password": MSSP_OPERATOR_PASSWORD, "captcha_key": "123", "captcha_text": "123"})
+    response = await client.post(
+        "/auth/login",
+        json={
+            "email": MSSP_OPERATOR_EMAIL,
+            "password": MSSP_OPERATOR_PASSWORD,
+            "captcha_key": "123",
+            "captcha_text": "123",
+        },
+    )
     assert response.status_code == 200
     tokens = response.json()
     logger.info(tokens)
@@ -58,7 +66,13 @@ class TestTask:
 
         # Log in as the new tenant admin
         response = await client.post(
-            "/auth/login", json={"email": self.tenant_admin_email, "password": self.tenant_admin_password, "captcha_key": "123", "captcha_text": "123"}
+            "/auth/login",
+            json={
+                "email": self.tenant_admin_email,
+                "password": self.tenant_admin_password,
+                "captcha_key": "123",
+                "captcha_text": "123",
+            },
         )
         assert response.status_code == 200
         tokens = response.json()
@@ -87,7 +101,15 @@ class TestTask:
         assert response.json()["email"] == tenant_user_email
 
         # Log in as the new tenant user
-        response = await client.post("/auth/login", json={"email": tenant_user_email, "password": tenant_user_password, "captcha_key": "123", "captcha_text": "123"})
+        response = await client.post(
+            "/auth/login",
+            json={
+                "email": tenant_user_email,
+                "password": tenant_user_password,
+                "captcha_key": "123",
+                "captcha_text": "123",
+            },
+        )
         assert response.status_code == 200
         tokens = response.json()
         return tokens["access_token"]

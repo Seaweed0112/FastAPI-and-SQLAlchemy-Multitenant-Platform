@@ -11,8 +11,6 @@ from app.schemas.auth import Identity
 from app.security import get_random_password
 
 
-
-
 async def create_tenant(mssp: Identity, tenant_org: str, tenant_admin: UserCreate, management_db: AsyncSession):
     tenant_db_name = await create_tenant_database(tenant_org)
     await add_tenant_to_db(tenant_org, tenant_admin, tenant_db_name, management_db)
